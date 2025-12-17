@@ -1,3 +1,6 @@
+import "primereact/resources/themes/soho-dark/theme.css";
+import "primeicons/primeicons.css";
+import "../node_modules/primeflex/primeflex.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
