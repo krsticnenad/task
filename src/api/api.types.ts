@@ -13,3 +13,26 @@ export const HttpMethod = {
  * Union type representing all supported HTTP methods.
  */
 export type HttpMethod = (typeof HttpMethod)[keyof typeof HttpMethod];
+
+/**
+ * Params for pagination API requests.
+ */
+export interface PaginationParams {
+  page?: number;
+  limit?: number;
+}
+
+/**
+ * Params for sorting API requests.
+ */
+export interface SortParams {
+  sort?: string;
+  order?: "asc" | "desc";
+}
+
+/**
+ * Combined query parameters for list endpoints.
+ *
+ * Includes pagination and sorting options.
+ */
+export type ListQueryParams = PaginationParams & SortParams;

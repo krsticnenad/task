@@ -7,6 +7,8 @@ import type { HttpMethod } from "./api.types";
 interface RequestOptions extends RequestInit {
   method: HttpMethod;
   body?: any;
+  headers?: HeadersInit;
+  params?: Record<string, string | number | boolean | undefined>;
 }
 
 /**

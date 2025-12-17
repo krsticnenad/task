@@ -1,5 +1,6 @@
 import { apiClient } from "../api.client";
 import { API_ROUTES } from "../api.config";
+import type { ListQueryParams } from "../api.types";
 import type { User } from "./users.types";
 
 /**
@@ -13,9 +14,15 @@ export const usersApi = {
    *
    * @returns A promise that resolves with an array of users.
    */
-  getAll: () =>
+  getAll: (params?: ListQueryParams) =>
     apiClient<User[]>(API_ROUTES.USERS.GET.path, {
       method: API_ROUTES.USERS.GET.method,
+      params: {
+        _page: params?.page,
+        _limit: params?.limit,
+        _sort: params?.sort,
+        _order: params?.order,
+      },
     }),
 
   /**
