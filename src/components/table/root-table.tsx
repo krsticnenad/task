@@ -23,6 +23,7 @@ export function RootTable<T extends object>({
   sortField,
   sortOrder,
   rows = DEFAULT_ROWS_PER_PAGE,
+  rowsPerPageOptions,
   emptyMessage = EMPTY_STATE_MESSAGE,
 }: RootTableProps<T>) {
   return (
@@ -38,6 +39,8 @@ export function RootTable<T extends object>({
       onSort={onSort}
       dataKey={dataKey as string}
       emptyMessage={emptyMessage}
+      rowsPerPageOptions={rowsPerPageOptions}
+      lazy
     >
       {columns.map((column) => (
         <Column

@@ -1,3 +1,4 @@
+import { DEFAULT_ROWS_PER_PAGE } from "@/constants/table.defaults";
 import type { ListQueryParams } from "../api.types";
 
 /**
@@ -8,7 +9,7 @@ import type { ListQueryParams } from "../api.types";
  */
 export const USERS_QUERY_DEFAULTS: Required<ListQueryParams> = {
   page: 1,
-  limit: 10,
+  limit: DEFAULT_ROWS_PER_PAGE,
   sort: "id",
   order: "asc",
 };

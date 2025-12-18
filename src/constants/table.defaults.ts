@@ -24,3 +24,8 @@ export const MAX_ROWS_PER_PAGE: number = 100;
  * this ensures pagination will always starts from page 1.
  */
 export const MIN_PAGE: number = 1;
+
+/**
+ * Default options for the number of rows displayed per page in tables.
+ */
+export const DEFAULT_ROWS_PER_PAGE_OPTIONS = [5, 10, 20, 50, 100];

@@ -4,7 +4,14 @@ import { RootTable } from "@/components/table";
 import { usersTableColumns } from "./users-table.columns";
 import { EMPTY_STATE_MESSAGE } from "@/constants/table.defaults";
 
-export const UsersTable: FC<UsersTableProps> = ({ users, isLoading, rows }) => {
+export const UsersTable: FC<UsersTableProps> = ({
+  users,
+  isLoading,
+  rows,
+  rowsPerPageOptions,
+  totalRecords,
+  onPageChange,
+}) => {
   return (
     <RootTable
       data={users}
@@ -13,7 +20,10 @@ export const UsersTable: FC<UsersTableProps> = ({ users, isLoading, rows }) => {
       loading={isLoading}
       paginator={true}
       rows={rows}
+      rowsPerPageOptions={rowsPerPageOptions}
+      totalRecords={totalRecords}
       emptyMessage={EMPTY_STATE_MESSAGE}
+      onPageChange={onPageChange}
     />
   );
 };

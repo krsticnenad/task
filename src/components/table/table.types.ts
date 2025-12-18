@@ -102,4 +102,9 @@ export interface RootTableProps<T> {
    * Message displayed when no data is available.
    */
   emptyMessage?: string;
+
+  /**
+   * Available options for the number of rows per page displayed in paginator
+   */
+  rowsPerPageOptions?: number[];
 }

@@ -44,3 +44,11 @@ export interface SortParams {
  * Includes pagination and sorting options.
  */
 export type ListQueryParams = PaginationParams & SortParams;
+
+/**
+ * Geneeric API response wrapper.
+ */
+export interface ApiResult<T> {
+  data: T;
+  totalRecords?: number;
+}
