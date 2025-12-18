@@ -1,3 +1,4 @@
+import { buildQueryString } from "@/utils/build-query-string";
 import { API_BASE_URL } from "./api.config";
 import type { HttpMethod } from "./api.types";
 
@@ -25,7 +26,8 @@ export async function apiClient<T>(
   path: string,
   options: RequestOptions
 ): Promise<T> {
-  const url = `${API_BASE_URL}${path}`;
+  const query = buildQueryString(options.params);
+  const url = `${API_BASE_URL}${path}${query}`;
 
   const conf: RequestOptions = {
     ...options,

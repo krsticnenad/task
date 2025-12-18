@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { UsersKeys } from "./users.key";
 import { usersApi } from "./users.api";
 import type { ListQueryParams } from "../api.types";
+import { USERS_QUERY_DEFAULTS } from "./users.query.defaults";
 
 /**
  * React Query hook for fetching the list of users.
@@ -11,9 +12,11 @@ import type { ListQueryParams } from "../api.types";
  *
  * @returns React Query results object with users data.
  */
-export const useUsersQuery = (params: ListQueryParams) => {
+export const useUsersQuery = (
+  params: ListQueryParams = USERS_QUERY_DEFAULTS
+) => {
   return useQuery({
-    queryKey: UsersKeys.all,
+    queryKey: UsersKeys.list(params),
     queryFn: () => usersApi.getAll(params),
   });
 };

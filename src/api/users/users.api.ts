@@ -15,7 +15,7 @@ export const usersApi = {
    * @returns A promise that resolves with an array of users.
    */
   getAll: (params?: ListQueryParams) =>
-    apiClient<User[]>(API_ROUTES.USERS.GET.path, {
+    apiClient<User[]>(`${API_ROUTES.USERS.GET.path}`, {
       method: API_ROUTES.USERS.GET.method,
       params: {
         _page: params?.page,

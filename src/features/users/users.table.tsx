@@ -2,12 +2,9 @@ import type { FC } from "react";
 import type { UsersTableProps } from "./users-table.types";
 import { RootTable } from "@/components/table";
 import { usersTableColumns } from "./users-table.columns";
-import {
-  DEFAULT_ROWS_PER_PAGE,
-  EMPTY_STATE_MESSAGE,
-} from "@/constants/table.defaults";
+import { EMPTY_STATE_MESSAGE } from "@/constants/table.defaults";
 
-export const UsersTable: FC<UsersTableProps> = ({ users, isLoading }) => {
+export const UsersTable: FC<UsersTableProps> = ({ users, isLoading, rows }) => {
   return (
     <RootTable
       data={users}
@@ -15,7 +12,7 @@ export const UsersTable: FC<UsersTableProps> = ({ users, isLoading }) => {
       dataKey="id"
       loading={isLoading}
       paginator={true}
-      rows={DEFAULT_ROWS_PER_PAGE}
+      rows={rows}
       emptyMessage={EMPTY_STATE_MESSAGE}
     />
   );

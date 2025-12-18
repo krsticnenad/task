@@ -23,11 +23,19 @@ export interface PaginationParams {
 }
 
 /**
+ * Defines the sorting order for list-based API requests.
+ *
+ * - `asc` - Sort results in ascending order
+ * - `desc` - Sort results in descending order
+ */
+export type SortOrder = "asc" | "desc";
+
+/**
  * Params for sorting API requests.
  */
 export interface SortParams {
   sort?: string;
-  order?: "asc" | "desc";
+  order?: SortOrder;
 }
 
 /**
