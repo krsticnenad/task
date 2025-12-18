@@ -10,7 +10,12 @@ export const usersTableColumns: TableColumn<User>[] = [
   {
     field: "avatar",
     header: "Avatar",
-    body: (user: User) => <Avatar image={user.avatar} />,
+    body: (user: User) => (
+      <Avatar
+        image={user.avatar || undefined}
+        icon={!user.avatar ? "pi pi-user" : undefined}
+      />
+    ),
   },
   {
     field: "firstName",
