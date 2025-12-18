@@ -13,6 +13,7 @@ export const UsersTable: FC<UsersTableProps> = ({
   lazy,
   first,
   onPageChange,
+  onSort,
 }) => {
   return (
     <RootTable
@@ -27,6 +28,7 @@ export const UsersTable: FC<UsersTableProps> = ({
       totalRecords={totalRecords}
       emptyMessage={EMPTY_STATE_MESSAGE}
       onPageChange={onPageChange}
+      onSort={onSort}
       lazy={lazy}
     />
   );
