@@ -5,25 +5,29 @@ import { usersTableColumns } from "./users-table.columns";
 import { EMPTY_STATE_MESSAGE } from "@/constants/table.defaults";
 
 export const UsersTable: FC<UsersTableProps> = ({
-  users,
-  isLoading,
+  data,
+  loading,
   rows,
   rowsPerPageOptions,
   totalRecords,
+  lazy,
+  first,
   onPageChange,
 }) => {
   return (
     <RootTable
-      data={users}
+      first={first}
+      data={data}
       columns={usersTableColumns}
       dataKey="id"
-      loading={isLoading}
+      loading={loading}
       paginator={true}
       rows={rows}
       rowsPerPageOptions={rowsPerPageOptions}
       totalRecords={totalRecords}
       emptyMessage={EMPTY_STATE_MESSAGE}
       onPageChange={onPageChange}
+      lazy={lazy}
     />
   );
 };

@@ -38,11 +38,11 @@ export interface TableColumn<T> {
 }
 
 /**
- * Props for the RootTable component.
+ * Base props for the RootTable component.
  *
  * @typeParam T - The the of a single row in the table.
  */
-export interface RootTableProps<T> {
+export interface BaseTableProps<T> {
   /**
    * The data rows displayed in the table.
    */
@@ -107,4 +107,54 @@ export interface RootTableProps<T> {
    * Available options for the number of rows per page displayed in paginator
    */
   rowsPerPageOptions?: number[];
+
+  /**
+   * Enables lazy loading for lagre datasets, fetching only the current page
+   * and relying on external callbacks for pagination, sorting and filtering.
+   */
+  lazy?: boolean;
+
+  /**
+   * Enables vertical scrolling for the table when set to true.
+   *
+   * Must be used together with `scrollHeight` to define the visible viewport height,
+   * keeping headers fiexed while the data scrolls.
+   */
+  scrollable?: boolean;
+
+  /**
+   * Sets the height of the scrollable viewport for the table.
+   *
+   * Only relevant if `scrollable` is true. Allows the table body to scroll while
+   * keepiing the header fixed.
+   */
+  scrollHeight?: string;
+
+  /**
+   * Index of the first row to display in the current page (0-based).
+   */
+  first?: number;
 }
+
+interface ScrollableTable {
+  scrollable: true;
+  scrollHeight: string;
+}
+
+interface NonScrollableTable {
+  scrollable?: false;
+  scrollHeight?: never;
+}
+
+/**
+ * Props for the RootTable component.
+ *
+ * Combines the base table props with the scrollable behavior contstraints.
+ *
+ * - If `scrollable` is set to `true`, `scrollHeight` must be provided to define
+ * the visible viewport height for vertical scrolling while keeping headers fixed.
+ *
+ * - If `scrollable` is not set or `false`, `scrollHeight` must not be provided.
+ */
+export type RootTableProps<T> = BaseTableProps<T> &
+  (ScrollableTable | NonScrollableTable);

@@ -7,6 +7,15 @@ import {
 } from "@/constants/table.defaults";
 import { useSearchParams } from "react-router-dom";
 
+/**
+ * Custom hook for reading and vlidation user-related query params from the URL.
+ *
+ * @returns An object with validated query params:
+ * - `page`: current page number
+ * - `limit`: number of items per page
+ * - `sort`: field used for sorting
+ * - `order`: sort order
+ */
 export function useUsersSearchParams(): Required<ListQueryParams> {
   const [searchParams] = useSearchParams();
 

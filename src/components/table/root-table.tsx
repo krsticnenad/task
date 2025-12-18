@@ -22,12 +22,15 @@ export function RootTable<T extends object>({
   onSort,
   sortField,
   sortOrder,
+  lazy,
   rows = DEFAULT_ROWS_PER_PAGE,
   rowsPerPageOptions,
   emptyMessage = EMPTY_STATE_MESSAGE,
+  first,
 }: RootTableProps<T>) {
   return (
     <DataTable
+      first={first}
       value={data}
       loading={loading}
       paginator={paginator}
@@ -40,7 +43,9 @@ export function RootTable<T extends object>({
       dataKey={dataKey as string}
       emptyMessage={emptyMessage}
       rowsPerPageOptions={rowsPerPageOptions}
-      lazy
+      lazy={lazy}
+      scrollHeight="578px"
+      scrollable
     >
       {columns.map((column) => (
         <Column
