@@ -42,7 +42,7 @@ export interface TableColumn<T> {
  *
  * @typeParam T - The the of a single row in the table.
  */
-export interface BaseTableProps<T> {
+export interface RootTableProps<T> {
   /**
    * The data rows displayed in the table.
    */
@@ -135,26 +135,3 @@ export interface BaseTableProps<T> {
    */
   first?: number;
 }
-
-interface ScrollableTable {
-  scrollable: true;
-  scrollHeight: string;
-}
-
-interface NonScrollableTable {
-  scrollable?: false;
-  scrollHeight?: never;
-}
-
-/**
- * Props for the RootTable component.
- *
- * Combines the base table props with the scrollable behavior contstraints.
- *
- * - If `scrollable` is set to `true`, `scrollHeight` must be provided to define
- * the visible viewport height for vertical scrolling while keeping headers fixed.
- *
- * - If `scrollable` is not set or `false`, `scrollHeight` must not be provided.
- */
-export type RootTableProps<T> = BaseTableProps<T> &
-  (ScrollableTable | NonScrollableTable);

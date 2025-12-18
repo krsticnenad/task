@@ -12,6 +12,8 @@ export const UsersTable: FC<UsersTableProps> = ({
   totalRecords,
   lazy,
   first,
+  scrollable,
+  scrollHeight,
   onPageChange,
   onSort,
 }) => {
@@ -30,6 +32,8 @@ export const UsersTable: FC<UsersTableProps> = ({
       onPageChange={onPageChange}
       onSort={onSort}
       lazy={lazy}
+      scrollable={scrollable}
+      scrollHeight={scrollHeight}
     />
   );
 };

@@ -5,6 +5,10 @@ import {
   DEFAULT_ROWS_PER_PAGE,
   EMPTY_STATE_MESSAGE,
 } from "@/constants/table.defaults";
+import { Skeleton } from "primereact/skeleton";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+
+const MIN_LOADING_TIME: number = 300; // ms
 
 /**
  * Reusable data table component built on top PrimeReact's {@link DataTable}
@@ -28,11 +32,34 @@ export function RootTable<T extends object>({
   emptyMessage = EMPTY_STATE_MESSAGE,
   first,
 }: RootTableProps<T>) {
+  const skeletonData = Array.from({ length: rows }, (_, i) => ({ id: i } as T));
+  const loadingStartTime = useRef<number | null>(null);
+  const [visibleLoading, setIsVisibleLoading] = useState(false);
+
+  const bodyTemplate = (rowData: T, field: keyof T): ReactNode => {
+    if (visibleLoading) return <Skeleton width="100%" height="1.5rem" />;
+    return rowData[field] != null ? String(rowData[field]) : null;
+  };
+
+  useEffect(() => {
+    if (loading) {
+      loadingStartTime.current = Date.now();
+      setIsVisibleLoading(true);
+    } else if (loadingStartTime.current) {
+      const elapsed = Date.now() - loadingStartTime.current;
+      const remaining = Math.max(MIN_LOADING_TIME - elapsed, 0);
+      const timer = setTimeout(() => {
+        setIsVisibleLoading(false);
+      }, remaining);
+
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
   return (
     <DataTable
+      stripedRows
       first={first}
-      value={data}
-      loading={loading}
+      value={visibleLoading ? skeletonData : data}
       paginator={paginator}
       rows={rows}
       totalRecords={totalRecords}
@@ -52,7 +79,16 @@ export function RootTable<T extends object>({
           key={String(column.field)}
           field={String(column.field)}
           header={column.header}
-          body={column.body}
+          body={
+            column.body
+              ? (rowData: T) =>
+                  visibleLoading ? (
+                    <Skeleton width="100%" height="1.5rem" />
+                  ) : (
+                    column.body!(rowData)
+                  )
+              : (rowData: T) => bodyTemplate(rowData, column.field)
+          }
           sortable={column.sortable}
           className={column.className}
         />

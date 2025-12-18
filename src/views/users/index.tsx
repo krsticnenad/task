@@ -4,10 +4,12 @@ import { DEFAULT_ROWS_PER_PAGE_OPTIONS } from "@/constants/table.defaults";
 import { UsersTable } from "@/features/users";
 import { useUpdateSearchParams } from "@/hooks/use-update-users-search-params";
 import { useUsersSearchParams } from "@/hooks/use-users-search-params";
+import { preloadImages } from "@/utils/preload-images";
 import type {
   DataTablePageEvent,
   DataTableSortEvent,
 } from "primereact/datatable";
+import { useEffect } from "react";
 
 export function UsersView() {
   const searchParams = useUsersSearchParams();
@@ -17,8 +19,16 @@ export function UsersView() {
   const usersData = users?.data ?? [];
   const totalRecords = users?.totalRecords;
 
+  useEffect(() => {
+    if (!usersData.length) return;
+
+    preloadImages(usersData, "avatar");
+  }, [usersData]);
+
   return (
     <UsersTable
+      scrollable
+      scrollHeight="578px"
       first={(searchParams.page - 1) * searchParams.limit}
       data={usersData}
       loading={isLoading}
