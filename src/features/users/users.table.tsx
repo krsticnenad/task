@@ -1,10 +1,10 @@
 import type { FC } from "react";
 import type { UsersTableProps } from "./users-table.types";
 import { RootTable } from "@/components/table";
-import { usersTableColumns } from "./users-table.columns";
 import { EMPTY_STATE_MESSAGE } from "@/constants/table.defaults";
 
 export const UsersTable: FC<UsersTableProps> = ({
+  columns,
   data,
   loading,
   rows,
@@ -28,7 +28,7 @@ export const UsersTable: FC<UsersTableProps> = ({
       sortOrder={sortOrder}
       first={first}
       data={data}
-      columns={usersTableColumns}
+      columns={columns}
       dataKey="id"
       loading={loading}
       paginator={true}

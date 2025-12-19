@@ -16,4 +16,5 @@ export interface User {
   avatar: string;
   country: Country;
   role: Role;
+  remove: () => void;
 }

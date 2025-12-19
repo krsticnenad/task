@@ -1,6 +1,7 @@
 import type { User } from "@/api/users/users.types";
 import type { TableColumn } from "@/components/table";
 import { Avatar } from "primereact/avatar";
+import { Button } from "primereact/button";
 import { Chip } from "primereact/chip";
 
 const roleColors: Record<number, string> = {
@@ -40,9 +41,13 @@ export const usersTableColumns: TableColumn<User>[] = [
     sortable: true,
   },
   {
+    field: "email",
+    header: "Email",
+    sortable: true,
+  },
+  {
     field: "role",
     header: "Role",
-    sortable: true,
     body: (user: User) => {
       const roleSpecificClass = user.role
         ? `custom-role-chip--${roleColors[user.role.id]}`
@@ -56,14 +61,26 @@ export const usersTableColumns: TableColumn<User>[] = [
     },
   },
   {
-    field: "email",
-    header: "Email",
-    sortable: true,
-  },
-  {
     field: "country",
     header: "Country",
-    sortable: true,
     body: (user: User) => user.country?.name || "--",
   },
 ];
+
+export const usersTableActionsColumns = (
+  onDelete: (id: number) => void
+): TableColumn<User> => ({
+  field: "remove",
+  header: "Action",
+  body: (user: User) => (
+    <Button
+      size="small"
+      outlined
+      icon="pi pi-trash"
+      severity="danger"
+      aria-label="Cancel"
+      tooltip="Delete user"
+      onClick={() => onDelete(user.id)}
+    />
+  ),
+});

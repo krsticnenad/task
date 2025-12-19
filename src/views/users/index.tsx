@@ -1,10 +1,18 @@
-import { useUsersQuery } from "@/api/users/use-users-query";
+import {
+  useDeleteUserMutation,
+  useUsersQuery,
+} from "@/api/users/use-users-query";
 import type { User } from "@/api/users/users.types";
 import { DEFAULT_ROWS_PER_PAGE_OPTIONS } from "@/constants/table.defaults";
-import { UsersTable } from "@/features/users";
+import {
+  UsersTable,
+  usersTableActionsColumns,
+  usersTableColumns,
+} from "@/features/users";
 import { useUpdateSearchParams } from "@/hooks/use-update-users-search-params";
 import { useUsersSearchParams } from "@/hooks/use-users-search-params";
 import { preloadImages } from "@/utils/preload-images";
+import { ConfirmDialog } from "primereact/confirmdialog";
 import type {
   DataTablePageEvent,
   DataTableSortEvent,
@@ -13,11 +21,16 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export function UsersView() {
-  const searchParams = useUsersSearchParams();
   const [tableHeight, setTableHeight] = useState<string>("600px");
+  const [userToDelete, setUserToDelete] = useState<number | null>(null);
+  const [isVisibleDialog, setIsVisibleDialog] = useState<boolean>(false);
+
+  const deleteUserHandler = useDeleteUserMutation();
+  const searchParams = useUsersSearchParams();
   const { data: users, isLoading } = useUsersQuery(searchParams);
   const { setSearchParams, removeSearchParams } = useUpdateSearchParams();
   const [routerSearchParams] = useSearchParams();
+
   const usersData = users?.data ?? [];
   const totalRecords = users?.totalRecords;
 
@@ -28,7 +41,7 @@ export function UsersView() {
     setSearchParams({ page, limit });
   };
 
-  const handleOnSort = (event: DataTableSortEvent) => {
+  const handleOnSort = (event: DataTableSortEvent): void => {
     const clickedField = event.sortField === searchParams.sort;
 
     if (!clickedField) {
@@ -55,6 +68,26 @@ export function UsersView() {
     return order === "asc" ? 1 : order === "desc" ? -1 : undefined;
   };
 
+  const handleDeleteAction = (id: number) => {
+    console.log("Id", id);
+    setUserToDelete(id);
+    setIsVisibleDialog(true);
+  };
+
+  const handleDeleteConfirmation = async () => {
+    if (!userToDelete) return;
+
+    deleteUserHandler.mutate(userToDelete.toString(), {
+      onSuccess: () => {
+        setIsVisibleDialog(false);
+        setUserToDelete(null);
+      },
+      onError: (err) => {
+        console.log("Error", err);
+      },
+    });
+  };
+
   useEffect(() => {
     if (!usersData.length) return;
 
@@ -63,9 +96,25 @@ export function UsersView() {
 
   return (
     <div className="flex w-12 h-full align-items-center justify-content-center">
+      <ConfirmDialog
+        visible={isVisibleDialog}
+        position="top"
+        onHide={() => setIsVisibleDialog(false)}
+        message="Do you want to delete this record?"
+        header="Delete Confirmation"
+        icon="pi pi-exclamation-triangle"
+        accept={handleDeleteConfirmation}
+        reject={() => {}}
+        acceptClassName="p-button-danger"
+        rejectClassName="p-button-text"
+      />
       <div className="w-10">
         <h1>Users</h1>
         <UsersTable
+          columns={[
+            ...usersTableColumns,
+            usersTableActionsColumns(handleDeleteAction),
+          ]}
           sortField={
             (routerSearchParams.get("sort") as keyof User) || undefined
           }
