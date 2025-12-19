@@ -3,6 +3,8 @@ import {
   useUsersQuery,
 } from "@/api/users/use-users-query";
 import type { User } from "@/api/users/users.types";
+import { ErrorMessages } from "@/constants/messages.error";
+import { SuccessMessages } from "@/constants/messages.success";
 import { DEFAULT_ROWS_PER_PAGE_OPTIONS } from "@/constants/table.defaults";
 import {
   UsersTable,
@@ -17,7 +19,8 @@ import type {
   DataTablePageEvent,
   DataTableSortEvent,
 } from "primereact/datatable";
-import { useEffect, useState } from "react";
+import { Toast } from "primereact/toast";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export function UsersView() {
@@ -30,6 +33,7 @@ export function UsersView() {
   const { data: users, isLoading } = useUsersQuery(searchParams);
   const { setSearchParams, removeSearchParams } = useUpdateSearchParams();
   const [routerSearchParams] = useSearchParams();
+  const toast = useRef<Toast>(null);
 
   const usersData = users?.data ?? [];
   const totalRecords = users?.totalRecords;
@@ -37,7 +41,8 @@ export function UsersView() {
   const handleOnPageChange = (event: DataTablePageEvent) => {
     const page = event.first / event.rows + 1;
     const limit = event.rows;
-    if (limit < 10) setTableHeight("auto");
+
+    if (limit < 10 || event.rows < 10) setTableHeight("auto");
     setSearchParams({ page, limit });
   };
 
@@ -69,7 +74,6 @@ export function UsersView() {
   };
 
   const handleDeleteAction = (id: number) => {
-    console.log("Id", id);
     setUserToDelete(id);
     setIsVisibleDialog(true);
   };
@@ -77,15 +81,26 @@ export function UsersView() {
   const handleDeleteConfirmation = async () => {
     if (!userToDelete) return;
 
-    deleteUserHandler.mutate(userToDelete.toString(), {
-      onSuccess: () => {
-        setIsVisibleDialog(false);
-        setUserToDelete(null);
-      },
-      onError: (err) => {
-        console.log("Error", err);
-      },
-    });
+    try {
+      await deleteUserHandler.mutateAsync(userToDelete.toString());
+
+      toast.current?.show({
+        severity: "success",
+        summary: SuccessMessages.deleteUser.summary,
+        detail: SuccessMessages.deleteUser.detail,
+      });
+    } catch (err: unknown) {
+      const detailMessage =
+        err instanceof Error ? err.message : ErrorMessages.deleteUser.detail;
+
+      toast.current?.show({
+        severity: "error",
+        summary: ErrorMessages.deleteUser.summary,
+        detail: detailMessage,
+      });
+    } finally {
+      setIsVisibleDialog(false);
+    }
   };
 
   useEffect(() => {
@@ -96,6 +111,7 @@ export function UsersView() {
 
   return (
     <div className="flex w-12 h-full align-items-center justify-content-center">
+      <Toast ref={toast} />
       <ConfirmDialog
         visible={isVisibleDialog}
         position="top"
@@ -104,7 +120,6 @@ export function UsersView() {
         header="Delete Confirmation"
         icon="pi pi-exclamation-triangle"
         accept={handleDeleteConfirmation}
-        reject={() => {}}
         acceptClassName="p-button-danger"
         rejectClassName="p-button-text"
       />
