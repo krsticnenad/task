@@ -16,7 +16,7 @@ Frontend aplikacija razvijena u okviru selekcionog zadatka, namenjena prikazu i 
 1. **Prikaz liste korisnika**
 
    - Dinamičko učitavanje podataka preko REST API-ja.
-   - Tabela sa paginacijom, sortiranjem i filtriranjem po ključnim kolonama (ID, ime, email, zemlja, uloga).
+   - Tabela sa paginacijom, sortiranjem i filtriranjem po ključnim kolonama (ID, ime, prezime, email, zemlja, uloga).
 
 2. **Brisanje korisnika**
 
