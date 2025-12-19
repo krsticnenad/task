@@ -1,3 +1,5 @@
+import type { SortOrder } from "@/api/api.types";
+
 /** Default number of rows displayed per page when pagination is enabled. */
 export const DEFAULT_ROWS_PER_PAGE: number = 10;
 
@@ -29,3 +31,5 @@ export const MIN_PAGE: number = 1;
  * Default options for the number of rows displayed per page in tables.
  */
 export const DEFAULT_ROWS_PER_PAGE_OPTIONS = [5, 10, 20, 50, 100];
+
+export const VALID_ORDERS: SortOrder[] = ["asc", "desc"];

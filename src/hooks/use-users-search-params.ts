@@ -4,11 +4,12 @@ import {
   MAX_ROWS_PER_PAGE,
   MIN_PAGE,
   MIN_ROWS_PER_PAGE,
+  VALID_ORDERS,
 } from "@/constants/table.defaults";
-import { useSearchParams } from "react-router-dom";
+import { useValidatedQueryParam } from "./use-validate-query-params";
 
 /**
- * Custom hook for reading and vlidation user-related query params from the URL.
+ * Hook for reading and vlidation user-related query params from the URL.
  *
  * @returns An object with validated query params:
  * - `page`: current page number
@@ -17,27 +18,42 @@ import { useSearchParams } from "react-router-dom";
  * - `order`: sort order
  */
 export function useUsersSearchParams(): Required<ListQueryParams> {
-  const [searchParams] = useSearchParams();
+  const page = useValidatedQueryParam<number>(
+    "page",
+    USERS_QUERY_DEFAULTS.page,
+    {
+      numericOptions: { min: MIN_PAGE },
+    }
+  );
 
-  const validOrders: SortOrder[] = ["asc", "desc"];
-  const order = searchParams.get("order");
-  const validatedOrder: SortOrder = validOrders.includes(order as SortOrder)
-    ? (order as SortOrder)
-    : USERS_QUERY_DEFAULTS.order;
+  const limit = useValidatedQueryParam<number>(
+    "limit",
+    USERS_QUERY_DEFAULTS.limit,
+    {
+      numericOptions: { min: MIN_ROWS_PER_PAGE, max: MAX_ROWS_PER_PAGE },
+    }
+  );
+
+  const sort = useValidatedQueryParam<string>(
+    "sort",
+    USERS_QUERY_DEFAULTS.sort,
+    {
+      validValues: ["firstName", "lastName", "email", "role", "country"],
+    }
+  );
+
+  const order = useValidatedQueryParam<SortOrder>(
+    "order",
+    USERS_QUERY_DEFAULTS.order,
+    {
+      validValues: VALID_ORDERS,
+    }
+  );
 
   return {
-    page: Math.max(
-      Number(searchParams.get("page") || USERS_QUERY_DEFAULTS.page),
-      MIN_PAGE
-    ),
-    limit: Math.min(
-      Math.max(
-        Number(searchParams.get("limit") || USERS_QUERY_DEFAULTS.limit),
-        MIN_ROWS_PER_PAGE
-      ),
-      MAX_ROWS_PER_PAGE
-    ),
-    sort: searchParams.get("sort") || USERS_QUERY_DEFAULTS.sort,
-    order: validatedOrder,
+    page,
+    limit,
+    sort,
+    order,
   };
 }
