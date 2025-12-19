@@ -7,6 +7,7 @@ import {
   VALID_ORDERS,
 } from "@/constants/table.defaults";
 import { useValidatedQueryParam } from "./use-validate-query-params";
+import type { UserSortKey } from "@/api/users/users.types";
 
 /**
  * Hook for reading and validation user-related query params from the URL.
@@ -32,24 +33,24 @@ export function useUsersSearchParams(): ListQueryParams &
     }) ?? USERS_QUERY_DEFAULTS.limit;
 
   const sort =
-    useValidatedQueryParam("sort", USERS_QUERY_DEFAULTS.sort, {
-      validValues: ["firstName", "lastName", "email", "role", "country"],
-    }) ?? USERS_QUERY_DEFAULTS.sort;
+    useValidatedQueryParam<UserSortKey>(
+      "sort",
+      USERS_QUERY_DEFAULTS.sort as UserSortKey,
+      {
+        validValues: ["firstName", "lastName", "email", "role", "country"],
+      }
+    ) ?? USERS_QUERY_DEFAULTS.sort;
 
   const order =
     useValidatedQueryParam<SortOrder>("order", USERS_QUERY_DEFAULTS.order, {
       validValues: VALID_ORDERS,
     }) ?? USERS_QUERY_DEFAULTS.order;
 
-  const country = useValidatedQueryParam<number | undefined>(
-    "country",
-    undefined,
-    {
-      numericOptions: { min: 1 },
-    }
-  );
+  const country = useValidatedQueryParam<number>("country", 0, {
+    numericOptions: { min: 1 },
+  });
 
-  const role = useValidatedQueryParam<number | undefined>("role", undefined, {
+  const role = useValidatedQueryParam<string>("role", "", {
     numericOptions: { min: 1 },
   });
 

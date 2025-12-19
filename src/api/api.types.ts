@@ -19,7 +19,7 @@ export type HttpMethod = (typeof HttpMethod)[keyof typeof HttpMethod];
  */
 export interface FilterParams {
   country?: number;
-  role?: number;
+  role?: string;
 }
 
 /**

@@ -1,7 +1,7 @@
 import { apiClient } from "../api.client";
 import { API_ROUTES } from "../api.config";
 import type { ListQueryParams } from "../api.types";
-import type { User } from "./users.types";
+import { USER_SORT_MAP, type User, type UserSortKey } from "./users.types";
 
 /**
  * API methods related to user.
@@ -15,10 +15,17 @@ export const usersApi = {
    * @returns A promise that resolves with an array of users.
    */
   getAll: (params?: ListQueryParams) => {
+    function resolveUserSort(
+      sort?: ListQueryParams["sort"]
+    ): string | undefined {
+      if (!sort) return undefined;
+      return USER_SORT_MAP[sort as UserSortKey] ?? sort;
+    }
+
     const queryParams: Record<string, any> = {
       _page: params?.page,
       _limit: params?.limit,
-      _sort: params?.sort,
+      _sort: resolveUserSort(params?.sort),
       _order: params?.order,
     };
 

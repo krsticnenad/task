@@ -35,7 +35,7 @@ export function UsersFilters({
         className="w-full md:w-auto"
         showClear
         placeholder="Filter by Role"
-        value={searchParams.role ?? null}
+        value={searchParams.role ? searchParams.role : null}
         options={rolesOptions}
         optionLabel="name"
         optionValue="name"

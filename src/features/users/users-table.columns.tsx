@@ -48,6 +48,7 @@ export const usersTableColumns: TableColumn<User>[] = [
   {
     field: "role",
     header: "Role",
+    sortable: true,
     body: (user: User) => {
       const roleSpecificClass = user.role
         ? `custom-role-chip--${roleColors[user.role.id]}`
@@ -63,6 +64,7 @@ export const usersTableColumns: TableColumn<User>[] = [
   {
     field: "country",
     header: "Country",
+    sortable: true,
     body: (user: User) => user.country?.name || "--",
   },
 ];

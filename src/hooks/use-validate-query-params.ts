@@ -15,18 +15,17 @@ interface NumericValidationOptions {
  * @param options - either validValues (for enums) or numericOptions
  * @returns Validated query parameter of type T
  */
-export function useValidatedQueryParam<T extends string | number | undefined>(
+export function useValidatedQueryParam<T extends string | number>(
   key: string,
   defaultValue: T,
   options?: { validValues?: T[]; numericOptions?: NumericValidationOptions }
-): T | undefined {
+): T {
   const [searchParams] = useSearchParams();
 
   return useMemo(() => {
     const rawValue = searchParams.get(key);
 
     if (rawValue === null) return defaultValue;
-    if (rawValue === null && defaultValue === undefined) return undefined;
 
     if (typeof defaultValue === "number") {
       let numValue = Number(rawValue);
@@ -47,5 +46,5 @@ export function useValidatedQueryParam<T extends string | number | undefined>(
     }
 
     return rawValue as T;
-  }, [key, searchParams, defaultValue, options]);
+  }, [key, searchParams, defaultValue]);
 }
