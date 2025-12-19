@@ -1,5 +1,4 @@
-import { useCountriesQuery } from "@/api/countries/use-countries-hooks";
-import { useRolesQuery } from "@/api/roles/use-roles-hooks";
+import type { ListQueryParams } from "@/api/api.types";
 import {
   useDeleteUserMutation,
   useUsersQuery,
@@ -13,6 +12,7 @@ import {
   usersTableActionsColumns,
   usersTableColumns,
 } from "@/features/users";
+import { UsersFilters } from "@/features/users-filter";
 import { useUpdateSearchParams } from "@/hooks/use-update-users-search-params";
 import { useUsersSearchParams } from "@/hooks/use-users-search-params";
 import { preloadImages } from "@/utils/preload-images";
@@ -21,9 +21,8 @@ import type {
   DataTablePageEvent,
   DataTableSortEvent,
 } from "primereact/datatable";
-import { Dropdown } from "primereact/dropdown";
 import { Toast } from "primereact/toast";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export function UsersView() {
@@ -41,19 +40,6 @@ export function UsersView() {
   } = useUpdateSearchParams();
   const [routerSearchParams] = useSearchParams();
   const toast = useRef<Toast>(null);
-  const { data: countries } = useCountriesQuery();
-  const countriesOptions = useMemo(() => {
-    return countries?.data.sort((a: { name: string }, b: { name: string }) =>
-      a.name.localeCompare(b.name)
-    );
-  }, [countries?.data]);
-
-  const { data: roles } = useRolesQuery();
-  const rolesOptions = useMemo(() => {
-    return roles?.data.sort((a: { name: string }, b: { name: string }) =>
-      a.name.localeCompare(b.name)
-    );
-  }, [roles?.data]);
 
   const usersData = users?.data ?? [];
   const totalRecords = users?.totalRecords;
@@ -121,6 +107,17 @@ export function UsersView() {
     }
   };
 
+  const handleFilterChange = (
+    key: keyof ListQueryParams,
+    value: string | number | null
+  ) => {
+    if (!value) {
+      removeSearchParam(key);
+    } else {
+      setSearchParam(key, value);
+    }
+  };
+
   useEffect(() => {
     if (!usersData.length) return;
 
@@ -144,43 +141,10 @@ export function UsersView() {
       <div className="w-10">
         <div className="flex w-full flex-row align-content-center justify-content-between">
           <h1>Users</h1>
-          <div className="flex w-full gap-3 align-items-center justify-content-end">
-            <Dropdown
-              variant="filled"
-              showClear
-              placeholder="Filter by Role"
-              value={searchParams.role ?? null}
-              options={rolesOptions}
-              optionLabel="name"
-              optionValue="name"
-              onChange={(e) => {
-                const selectedValue = e.value;
-                if (!selectedValue) {
-                  removeSearchParam("role");
-                } else {
-                  setSearchParam("role", selectedValue);
-                }
-              }}
-            />
-            <Dropdown
-              variant="filled"
-              filter
-              showClear
-              placeholder="Filter by Country"
-              value={Number(searchParams.country) ?? null}
-              options={countriesOptions}
-              optionLabel="name"
-              optionValue="id"
-              onChange={(e) => {
-                const selectedValue = e.value;
-                if (!selectedValue) {
-                  removeSearchParam("country");
-                } else {
-                  setSearchParam("country", selectedValue);
-                }
-              }}
-            />
-          </div>
+          <UsersFilters
+            searchParams={searchParams}
+            onFilterChange={handleFilterChange}
+          />
         </div>
         <UsersTable
           columns={[
