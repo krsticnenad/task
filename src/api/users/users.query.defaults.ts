@@ -7,7 +7,9 @@ import type { ListQueryParams } from "../api.types";
  * These values are used as a fallback when corresponding query parameters
  * are not present in the URL.
  */
-export const USERS_QUERY_DEFAULTS: Required<ListQueryParams> = {
+export const USERS_QUERY_DEFAULTS: Required<
+  Omit<ListQueryParams, "country" | "role">
+> = {
   page: 1,
   limit: DEFAULT_ROWS_PER_PAGE,
   sort: "id",

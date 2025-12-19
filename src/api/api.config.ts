@@ -21,4 +21,16 @@ export const API_ROUTES = {
       path: "/users/:id",
     },
   },
+  COUNTRIES: {
+    GET: {
+      method: HttpMethod.GET,
+      path: "/countries",
+    },
+  },
+  ROLES: {
+    GET: {
+      method: HttpMethod.GET,
+      path: "/roles",
+    },
+  },
 } as const;

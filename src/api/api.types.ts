@@ -15,6 +15,14 @@ export const HttpMethod = {
 export type HttpMethod = (typeof HttpMethod)[keyof typeof HttpMethod];
 
 /**
+ * Params for filtering API requests.
+ */
+export interface FilterParams {
+  country?: number;
+  role?: number;
+}
+
+/**
  * Params for pagination API requests.
  */
 export interface PaginationParams {
@@ -43,7 +51,19 @@ export interface SortParams {
  *
  * Includes pagination and sorting options.
  */
-export type ListQueryParams = PaginationParams & SortParams;
+export type ListQueryParams = PaginationParams & SortParams & FilterParams;
+
+export interface FiltersQueryParams {
+  country?: string;
+  role?: string;
+}
+
+/**
+ * Combined query parameters for all search query params
+ *
+ * Merges standard list query params with filter-specific params
+ */
+export type SearchQueryParams = ListQueryParams & FiltersQueryParams;
 
 /**
  * Geneeric API response wrapper.

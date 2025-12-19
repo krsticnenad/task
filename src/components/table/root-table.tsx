@@ -26,10 +26,10 @@ export function RootTable<T extends object>({
   rows = DEFAULT_ROWS_PER_PAGE,
   rowsPerPageOptions,
   emptyMessage = EMPTY_STATE_MESSAGE,
-  tableHeight = "auto",
   first,
   size = "normal",
 }: RootTableProps<T>) {
+  const tableHeight = data.length < 10 ? "auto" : "600px";
   return (
     <DataTable
       loading={loading}

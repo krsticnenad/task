@@ -9,51 +9,56 @@ import {
 import { useValidatedQueryParam } from "./use-validate-query-params";
 
 /**
- * Hook for reading and vlidation user-related query params from the URL.
+ * Hook for reading and validation user-related query params from the URL.
  *
  * @returns An object with validated query params:
  * - `page`: current page number
  * - `limit`: number of items per page
  * - `sort`: field used for sorting
  * - `order`: sort order
+ * - `country`: optional country filter
+ * - `role`: optional role filter
  */
-export function useUsersSearchParams(): Required<ListQueryParams> {
-  const page = useValidatedQueryParam<number>(
-    "page",
-    USERS_QUERY_DEFAULTS.page,
-    {
+export function useUsersSearchParams(): ListQueryParams &
+  Required<Pick<ListQueryParams, "page" | "limit" | "sort" | "order">> {
+  const page =
+    useValidatedQueryParam<number>("page", USERS_QUERY_DEFAULTS.page, {
       numericOptions: { min: MIN_PAGE },
-    }
-  );
+    }) ?? USERS_QUERY_DEFAULTS.page;
 
-  const limit = useValidatedQueryParam<number>(
-    "limit",
-    USERS_QUERY_DEFAULTS.limit,
-    {
+  const limit =
+    useValidatedQueryParam<number>("limit", USERS_QUERY_DEFAULTS.limit, {
       numericOptions: { min: MIN_ROWS_PER_PAGE, max: MAX_ROWS_PER_PAGE },
-    }
-  );
+    }) ?? USERS_QUERY_DEFAULTS.limit;
 
-  const sort = useValidatedQueryParam<string>(
-    "sort",
-    USERS_QUERY_DEFAULTS.sort,
-    {
+  const sort =
+    useValidatedQueryParam("sort", USERS_QUERY_DEFAULTS.sort, {
       validValues: ["firstName", "lastName", "email", "role", "country"],
+    }) ?? USERS_QUERY_DEFAULTS.sort;
+
+  const order =
+    useValidatedQueryParam<SortOrder>("order", USERS_QUERY_DEFAULTS.order, {
+      validValues: VALID_ORDERS,
+    }) ?? USERS_QUERY_DEFAULTS.order;
+
+  const country = useValidatedQueryParam<number | undefined>(
+    "country",
+    undefined,
+    {
+      numericOptions: { min: 1 },
     }
   );
 
-  const order = useValidatedQueryParam<SortOrder>(
-    "order",
-    USERS_QUERY_DEFAULTS.order,
-    {
-      validValues: VALID_ORDERS,
-    }
-  );
+  const role = useValidatedQueryParam<number | undefined>("role", undefined, {
+    numericOptions: { min: 1 },
+  });
 
   return {
     page,
     limit,
     sort,
     order,
+    country,
+    role,
   };
 }

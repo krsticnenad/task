@@ -1,7 +1,9 @@
+import { useCountriesQuery } from "@/api/countries/use-countries-hooks";
+import { useRolesQuery } from "@/api/roles/use-roles-hooks";
 import {
   useDeleteUserMutation,
   useUsersQuery,
-} from "@/api/users/use-users-query";
+} from "@/api/users/use-users-hooks";
 import type { User } from "@/api/users/users.types";
 import { ErrorMessages } from "@/constants/messages.error";
 import { SuccessMessages } from "@/constants/messages.success";
@@ -19,21 +21,39 @@ import type {
   DataTablePageEvent,
   DataTableSortEvent,
 } from "primereact/datatable";
+import { Dropdown } from "primereact/dropdown";
 import { Toast } from "primereact/toast";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export function UsersView() {
-  const [tableHeight, setTableHeight] = useState<string>("600px");
   const [userToDelete, setUserToDelete] = useState<number | null>(null);
   const [isVisibleDialog, setIsVisibleDialog] = useState<boolean>(false);
 
   const deleteUserHandler = useDeleteUserMutation();
   const searchParams = useUsersSearchParams();
   const { data: users, isLoading } = useUsersQuery(searchParams);
-  const { setSearchParams, removeSearchParams } = useUpdateSearchParams();
+  const {
+    setSearchParam,
+    setSearchParams,
+    removeSearchParams,
+    removeSearchParam,
+  } = useUpdateSearchParams();
   const [routerSearchParams] = useSearchParams();
   const toast = useRef<Toast>(null);
+  const { data: countries } = useCountriesQuery();
+  const countriesOptions = useMemo(() => {
+    return countries?.data.sort((a: { name: string }, b: { name: string }) =>
+      a.name.localeCompare(b.name)
+    );
+  }, [countries?.data]);
+
+  const { data: roles } = useRolesQuery();
+  const rolesOptions = useMemo(() => {
+    return roles?.data.sort((a: { name: string }, b: { name: string }) =>
+      a.name.localeCompare(b.name)
+    );
+  }, [roles?.data]);
 
   const usersData = users?.data ?? [];
   const totalRecords = users?.totalRecords;
@@ -41,8 +61,6 @@ export function UsersView() {
   const handleOnPageChange = (event: DataTablePageEvent) => {
     const page = event.first / event.rows + 1;
     const limit = event.rows;
-
-    if (limit < 10 || event.rows < 10) setTableHeight("auto");
     setSearchParams({ page, limit });
   };
 
@@ -124,7 +142,46 @@ export function UsersView() {
         rejectClassName="p-button-text"
       />
       <div className="w-10">
-        <h1>Users</h1>
+        <div className="flex w-full flex-row align-content-center justify-content-between">
+          <h1>Users</h1>
+          <div className="flex w-full gap-3 align-items-center justify-content-end">
+            <Dropdown
+              variant="filled"
+              showClear
+              placeholder="Filter by Role"
+              value={searchParams.role ?? null}
+              options={rolesOptions}
+              optionLabel="name"
+              optionValue="name"
+              onChange={(e) => {
+                const selectedValue = e.value;
+                if (!selectedValue) {
+                  removeSearchParam("role");
+                } else {
+                  setSearchParam("role", selectedValue);
+                }
+              }}
+            />
+            <Dropdown
+              variant="filled"
+              filter
+              showClear
+              placeholder="Filter by Country"
+              value={Number(searchParams.country) ?? null}
+              options={countriesOptions}
+              optionLabel="name"
+              optionValue="id"
+              onChange={(e) => {
+                const selectedValue = e.value;
+                if (!selectedValue) {
+                  removeSearchParam("country");
+                } else {
+                  setSearchParam("country", selectedValue);
+                }
+              }}
+            />
+          </div>
+        </div>
         <UsersTable
           columns={[
             ...usersTableColumns,
@@ -135,9 +192,8 @@ export function UsersView() {
           }
           scrollable
           scrollHeight="600px"
-          tableHeight={tableHeight}
           size="small"
-          first={(searchParams.page - 1) * searchParams.limit}
+          first={(searchParams?.page - 1) * searchParams?.limit}
           data={usersData}
           loading={isLoading}
           rows={searchParams.limit}

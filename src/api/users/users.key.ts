@@ -12,5 +12,13 @@ export const UsersKeys = {
    */
   all: ["users"] as const,
   list: (params: ListQueryParams = USERS_QUERY_DEFAULTS) =>
-    ["users", params.limit, params.order, params.page, params.sort] as const,
+    [
+      "users",
+      params.limit,
+      params.order,
+      params.page,
+      params.sort,
+      params.country,
+      params.role,
+    ] as const,
 };

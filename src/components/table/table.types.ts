@@ -139,9 +139,4 @@ export interface RootTableProps<T> {
    * Data table size
    */
   size?: "small" | "normal" | "large";
-
-  /**
-   * Height of the table.
-   */
-  tableHeight?: string;
 }

@@ -14,16 +14,27 @@ export const usersApi = {
    *
    * @returns A promise that resolves with an array of users.
    */
-  getAll: (params?: ListQueryParams) =>
-    apiClient<User[]>(`${API_ROUTES.USERS.GET.path}`, {
+  getAll: (params?: ListQueryParams) => {
+    const queryParams: Record<string, any> = {
+      _page: params?.page,
+      _limit: params?.limit,
+      _sort: params?.sort,
+      _order: params?.order,
+    };
+
+    if (params?.country) {
+      queryParams["country.id"] = params.country;
+    }
+
+    if (params?.role) {
+      queryParams["role.name"] = params.role;
+    }
+
+    return apiClient<User[]>(`${API_ROUTES.USERS.GET.path}`, {
       method: API_ROUTES.USERS.GET.method,
-      params: {
-        _page: params?.page,
-        _limit: params?.limit,
-        _sort: params?.sort,
-        _order: params?.order,
-      },
-    }),
+      params: queryParams,
+    });
+  },
 
   /**
    * Delete a user.

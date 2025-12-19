@@ -1,12 +1,5 @@
-export interface Country {
-  id: number;
-  name: string;
-}
-
-export interface Role {
-  id: number;
-  name: string;
-}
+import type { Country } from "../countries/countries.types";
+import type { Role } from "../roles/roles.types";
 
 export interface User {
   id: number;
