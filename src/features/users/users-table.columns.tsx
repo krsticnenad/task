@@ -14,6 +14,7 @@ export const usersTableColumns: TableColumn<User>[] = [
       <Avatar
         image={user.avatar || undefined}
         icon={!user.avatar ? "pi pi-user" : undefined}
+        style={{ width: "32px", height: "32px" }}
       />
     ),
   },

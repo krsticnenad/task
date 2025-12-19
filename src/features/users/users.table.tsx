@@ -14,11 +14,16 @@ export const UsersTable: FC<UsersTableProps> = ({
   first,
   scrollable,
   scrollHeight,
+  size,
+  sortField,
+  sortOrder,
   onPageChange,
   onSort,
 }) => {
   return (
     <RootTable
+      sortField={sortField}
+      sortOrder={sortOrder}
       first={first}
       data={data}
       columns={usersTableColumns}
@@ -34,6 +39,7 @@ export const UsersTable: FC<UsersTableProps> = ({
       lazy={lazy}
       scrollable={scrollable}
       scrollHeight={scrollHeight}
+      size={size}
     />
   );
 };

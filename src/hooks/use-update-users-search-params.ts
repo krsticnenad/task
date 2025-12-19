@@ -10,6 +10,18 @@ export function useUpdateSearchParams() {
   const [_searchParams, _setSearchParams] = useSearchParams();
 
   /**
+   * Applies a controlled update to the current URL search params.
+   * Centralized place for all query param mutations.
+   *
+   * @param handler - A function that receives th current URLSearchParams
+   */
+  const updateParams = (handler: (params: URLSearchParams) => void) => {
+    const params = new URLSearchParams(_searchParams);
+    handler(params);
+    _setSearchParams(params);
+  };
+
+  /**
    * Update a single query param in the URL.
    *
    * @param key - Name of the parameter
@@ -19,9 +31,9 @@ export function useUpdateSearchParams() {
     key: keyof ListQueryParams,
     value: string | number | undefined
   ) => {
-    const newParams = new URLSearchParams(_searchParams);
-    newParams.set(key, String(value));
-    _setSearchParams(newParams);
+    updateParams((params) => {
+      params.set(key, String(value));
+    });
   };
 
   /**
@@ -30,14 +42,43 @@ export function useUpdateSearchParams() {
    * @param params - Object with key-value to update
    */
   const setSearchParams = (
-    params: Partial<Record<keyof ListQueryParams, string | number>>
+    values: Partial<Record<keyof ListQueryParams, string | number>>
   ) => {
-    const newParams = new URLSearchParams(_searchParams);
-    Object.entries(params).forEach(([key, value]) => {
-      newParams.set(key, String(value));
+    updateParams((params) => {
+      Object.entries(values).forEach(([key, value]) => {
+        params.set(key, String(value));
+      });
     });
-    _setSearchParams(newParams);
   };
 
-  return { setSearchParam, setSearchParams, _searchParams };
+  /**
+   * Removes a single quert param from the URL
+   *
+   * @param key - The name of the query parameter to remove.
+   */
+  const removeSearchParam = (key: keyof ListQueryParams) => {
+    updateParams((params) => {
+      params.delete(key);
+    });
+  };
+
+  /**
+   * Removes multiple query params from the URL.
+   *
+   * @param keys - A list of query param names to remove.
+   */
+  const removeSearchParams = (keys: (keyof ListQueryParams)[]) => {
+    updateParams((params) => {
+      keys.forEach((key: keyof ListQueryParams) => {
+        params.delete(key);
+      });
+    });
+  };
+
+  return {
+    setSearchParam,
+    setSearchParams,
+    removeSearchParam,
+    removeSearchParams,
+  };
 }

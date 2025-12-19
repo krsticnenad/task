@@ -134,4 +134,9 @@ export interface RootTableProps<T> {
    * Index of the first row to display in the current page (0-based).
    */
   first?: number;
+
+  /**
+   * Data table size
+   */
+  size?: "small" | "normal" | "large";
 }

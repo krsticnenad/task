@@ -31,13 +31,15 @@ export function RootTable<T extends object>({
   rowsPerPageOptions,
   emptyMessage = EMPTY_STATE_MESSAGE,
   first,
+  size = "normal",
 }: RootTableProps<T>) {
   const skeletonData = Array.from({ length: rows }, (_, i) => ({ id: i } as T));
   const loadingStartTime = useRef<number | null>(null);
   const [visibleLoading, setIsVisibleLoading] = useState(false);
 
   const bodyTemplate = (rowData: T, field: keyof T): ReactNode => {
-    if (visibleLoading) return <Skeleton width="100%" height="1.5rem" />;
+    if (visibleLoading)
+      return <Skeleton width="100%" height="35px" style={{ padding: "8px" }} />;
     return rowData[field] != null ? String(rowData[field]) : null;
   };
 
@@ -55,9 +57,12 @@ export function RootTable<T extends object>({
       return () => clearTimeout(timer);
     }
   }, [loading]);
+
   return (
     <DataTable
+      style={{ minHeight: "578px", width: "100%" }}
       stripedRows
+      showGridlines
       first={first}
       value={visibleLoading ? skeletonData : data}
       paginator={paginator}
@@ -73,6 +78,7 @@ export function RootTable<T extends object>({
       lazy={lazy}
       scrollHeight="578px"
       scrollable
+      size={size}
     >
       {columns.map((column) => (
         <Column
@@ -83,7 +89,11 @@ export function RootTable<T extends object>({
             column.body
               ? (rowData: T) =>
                   visibleLoading ? (
-                    <Skeleton width="100%" height="1.5rem" />
+                    <Skeleton
+                      width="100%"
+                      height="35px"
+                      style={{ padding: "8px" }}
+                    />
                   ) : (
                     column.body!(rowData)
                   )
