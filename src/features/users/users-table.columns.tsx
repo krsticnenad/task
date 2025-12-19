@@ -1,6 +1,17 @@
 import type { User } from "@/api/users/users.types";
 import type { TableColumn } from "@/components/table";
 import { Avatar } from "primereact/avatar";
+import { Chip } from "primereact/chip";
+
+const roleColors: Record<number, string> = {
+  1: "administrator",
+  2: "engineer",
+  3: "pm",
+  4: "ux",
+  5: "qa",
+  6: "support-agent",
+  7: "devops",
+};
 
 export const usersTableColumns: TableColumn<User>[] = [
   {
@@ -29,7 +40,30 @@ export const usersTableColumns: TableColumn<User>[] = [
     sortable: true,
   },
   {
+    field: "role",
+    header: "Role",
+    sortable: true,
+    body: (user: User) => {
+      const roleSpecificClass = user.role
+        ? `custom-role-chip--${roleColors[user.role.id]}`
+        : "";
+      return (
+        <Chip
+          className={`custom-role-chip ${roleSpecificClass}`}
+          label={user.role?.name}
+        />
+      );
+    },
+  },
+  {
     field: "email",
     header: "Email",
+    sortable: true,
+  },
+  {
+    field: "country",
+    header: "Country",
+    sortable: true,
+    body: (user: User) => user.country?.name || "--",
   },
 ];

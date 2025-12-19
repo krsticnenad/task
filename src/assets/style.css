@@ -1,0 +1,40 @@
+.custom-role-chip {
+  font-size: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.custom-role-chip--administrator {
+  background-color: #2f1b2f;
+  color: #d19bff;
+}
+
+.custom-role-chip--engineer {
+  background-color: #1f2a38;
+  color: #81c7ff;
+}
+
+.custom-role-chip--pm {
+  background-color: #1b2830;
+  color: #66f0ff;
+}
+
+.custom-role-chip--ux {
+  background-color: #3b2f1b;
+  color: #ffd966;
+}
+
+.custom-role-chip--qa {
+  background-color: #2a1b1e;
+  color: #ff8b9d;
+}
+
+.custom-role-chip--support-agent {
+  background-color: #1b2a1f;
+  color: #8be28b;
+}
+
+.custom-role-chip--devops {
+  background-color: #1f1f2a;
+  color: #b3b3ff;
+}

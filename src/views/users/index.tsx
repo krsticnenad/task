@@ -9,11 +9,12 @@ import type {
   DataTablePageEvent,
   DataTableSortEvent,
 } from "primereact/datatable";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export function UsersView() {
   const searchParams = useUsersSearchParams();
+  const [tableHeight, setTableHeight] = useState<string>("600px");
   const { data: users, isLoading } = useUsersQuery(searchParams);
   const { setSearchParams, removeSearchParams } = useUpdateSearchParams();
   const [routerSearchParams] = useSearchParams();
@@ -23,6 +24,7 @@ export function UsersView() {
   const handleOnPageChange = (event: DataTablePageEvent) => {
     const page = event.first / event.rows + 1;
     const limit = event.rows;
+    if (limit < 10) setTableHeight("auto");
     setSearchParams({ page, limit });
   };
 
@@ -68,7 +70,8 @@ export function UsersView() {
             (routerSearchParams.get("sort") as keyof User) || undefined
           }
           scrollable
-          scrollHeight="578px"
+          scrollHeight="600px"
+          tableHeight={tableHeight}
           size="small"
           first={(searchParams.page - 1) * searchParams.limit}
           data={usersData}

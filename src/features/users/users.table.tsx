@@ -17,11 +17,13 @@ export const UsersTable: FC<UsersTableProps> = ({
   size,
   sortField,
   sortOrder,
+  tableHeight,
   onPageChange,
   onSort,
 }) => {
   return (
     <RootTable
+      tableHeight={tableHeight}
       sortField={sortField}
       sortOrder={sortOrder}
       first={first}

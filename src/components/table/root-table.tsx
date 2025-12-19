@@ -30,6 +30,7 @@ export function RootTable<T extends object>({
   rows = DEFAULT_ROWS_PER_PAGE,
   rowsPerPageOptions,
   emptyMessage = EMPTY_STATE_MESSAGE,
+  tableHeight = "auto",
   first,
   size = "normal",
 }: RootTableProps<T>) {
@@ -60,7 +61,7 @@ export function RootTable<T extends object>({
 
   return (
     <DataTable
-      style={{ minHeight: "578px", width: "100%" }}
+      tableStyle={{ height: tableHeight, width: "100%" }}
       stripedRows
       showGridlines
       first={first}
@@ -76,7 +77,7 @@ export function RootTable<T extends object>({
       emptyMessage={emptyMessage}
       rowsPerPageOptions={rowsPerPageOptions}
       lazy={lazy}
-      scrollHeight="578px"
+      scrollHeight="600px"
       scrollable
       size={size}
     >
