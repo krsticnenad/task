@@ -30,10 +30,9 @@ export function UsersFilters({
   }, [roles?.data]);
 
   return (
-    <div className="flex w-full gap-3 align-items-center justify-content-end">
-      {" "}
+    <div className="flex w-full flex-column sm:flex-row gap-3 align-items-center justify-content-start md:justify-content-end mb-4 md:mb-0">
       <Dropdown
-        variant="filled"
+        className="w-full md:w-auto"
         showClear
         placeholder="Filter by Role"
         value={searchParams.role ?? null}
@@ -43,7 +42,7 @@ export function UsersFilters({
         onChange={(e) => onFilterChange("role", e.value)}
       />{" "}
       <Dropdown
-        variant="filled"
+        className="w-full md:w-auto"
         filter
         showClear
         placeholder="Filter by Country"
@@ -52,7 +51,7 @@ export function UsersFilters({
         optionLabel="name"
         optionValue="id"
         onChange={(e) => onFilterChange("country", e.value)}
-      />{" "}
+      />
     </div>
   );
 }

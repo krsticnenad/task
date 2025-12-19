@@ -138,8 +138,8 @@ export function UsersView() {
         acceptClassName="p-button-danger"
         rejectClassName="p-button-text"
       />
-      <div className="w-10">
-        <div className="flex w-full flex-row align-content-center justify-content-between">
+      <div className="w-12 md:w-10 px-2">
+        <div className="flex w-full flex-column md:flex-row align-content-center justify-content-between">
           <h1>Users</h1>
           <UsersFilters
             searchParams={searchParams}
